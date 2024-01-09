@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dashboard page</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+
+            
+            
+        }
+        .navbar{
+            height: 100px;
+            background-color:aquamarine;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .links{
+            display: flex;
+            width: 30%;
+            justify-content: space-evenly;
+            cursor: pointer;
+        }
+        .logo{
+            margin-left: 40px;
+            cursor: pointer;
+        }
+
+        .product-item{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 270px;
+            width: 270px;
+            border: 1px solid black;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .productContainer{
+            
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 30px;
+        }
+        .log-out{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+
+        }
+        button{
+            width: 50px;
+            background-color: rgb(85, 198, 226)
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">logo</div>
+        <div class="links">
+            <div id="cart-icon" onclick="addToCart()">cart <span id="cart-value">0</span></div>
+            <div id="user-icon" >user</div>
+        </div>
+    </div>
+        
+
+    
+    <div class="productContainer" id="product-container"></div>
+
+</body>
+
+<script>
+    window.addEventListener('load',fetchProducts());
+
+    async function fetchProducts(){
+        let response=await fetch('https://fakestoreapi.com/products');
+        let data=await response.json();
+        // console.log(data);
+        let cart=localStorage.setItem('cart',JSON.stringify(data));
+        displayProducts(data);
+        updateCartValue();
+    }
+
+    function displayProducts(products){
+        let productContainer=document.querySelector('#product-container');
+
+        products.map((product)=>{
+            // console.log(product);
+            let productElement = document.createElement('div');
+            productElement.setAttribute('class',"product-item");
+
+            let image=document.createElement('img');
+            image.setAttribute('src',`${product.image}`);
+            image.setAttribute('height',"100px");
+            image.setAttribute('width','100px')
+
+            let title=document.createElement('h3');
+            title.innerHTML=product.title;
+
+            let price=document.createElement('p');
+            price.innerHTML=product.price;
+
+            // console.log(title);
+            // console.log(price);
+            let button=document.createElement('button');
+            button.innerHTML='Buy';
+            button.addEventListener('click',()=>{
+                console.log(product);
+                let cartItems=JSON.parse(localStorage.getItem('cartItems')) || [];
+                cartItems.push(product);
+                localStorage.setItem('cartItems',JSON.stringify(cartItems));
+                updateCartValue();
+                button.disabled=true;
+            });
+
+
+            productElement.append(image,title,price,button);
+            // console.log(productElement);
+            productContainer.appendChild(productElement);
+
+        });
+    }
+    function updateCartValue(){
+        let cartValue=document.querySelector('#cart-value');
+        let length=JSON.parse(localStorage.getItem('cartItems')).length;
+        cartValue.innerHTML=length;
+    }
+    function addToCart(){
+        window.location.href='addtocart.html';
+    }
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

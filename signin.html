@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In Page</title>
+    <style>
+        #signin{
+            width: 500px;
+            height: 500px;
+            border: 1px solid black;
+            padding: 100px;
+        }
+    </style>
+</head>
+<body>
+    <form id="signin">
+        <label for="username">Username:</label>
+        <input type="text" id="username" required>
+        <br>
+        <br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+        <br><br>
+
+        <button type="button" onclick="signin()">Log In</button>
+
+    </form>
+
+    <script>
+        function signin(){
+            var username=document.getElementById('username').value;
+            var password=document.getElementById('password').value;
+
+            var users=JSON.parse(localStorage.getItem('users')) || [];
+            console.log(users);
+
+            var user=users.find(function (u){
+                return u.username === username;
+            });
+
+            if (user && user.password===password) {
+                alert('Sign in successful!');
+                window.location.href='dashboard.html';
+            } else {
+                var errorElement=document.getElementById('error');
+                errorElement.textContent ='Invalid username or password';
+            }
+        }
+    </script>
+</body>
+</html>

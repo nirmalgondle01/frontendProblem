@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        .container{
+            border: 1px solid black;
+            height: 500px;
+            width: 500px;
+            padding: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button type="button" onclick="signIn()">log In </button>
+        <button type="button" onclick="signUp()"> sign Up</button>
+    </div>
+</body>
+<script>
+    function signIn(){
+        window.location.href="signin.html";
+    }
+    function signUp(){
+        window.location.href="signup.html";
+    }
+</script>
+</html>

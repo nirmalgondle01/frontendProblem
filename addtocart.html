@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .cart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+        }
+        .product{
+            display: flex;
+            gap: 40px;
+            border: 1px solid green;
+            padding: 20px;
+            background-color: rgba(61, 226, 11, 0.1);
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cart-container" id="cartContainer">
+    </div>
+
+    <button class="checkout-btn" onclick="checkout()">Checkout</button>
+    <div class="success-message" id="successMessage"></div>
+
+    <script>
+        let cart = [];
+        const cartContainer = document.getElementById('cartContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+        const productList = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+        productList.forEach((item) => {
+            cart.push({
+                id: item.id,
+                title: item.title,
+                price: item.price,
+                image: item.image,
+                quantity: 1
+            })
+        })
+
+        function displayTotal() {
+            let sum=0;
+            for (let i=0;i<cart.length;i++) {
+                sum=sum+(cart[i].price*cart[i].quantity);
+            }
+            const totalElement=document.createElement('div');
+            totalElement.classList.add('total');
+            totalElement.textContent = `Total: $${sum.toFixed(2)}`;
+            cartContainer.appendChild(totalElement);
+        }
+
+        function displayCartItems() {
+            cartContainer.innerHTML = '';
+            cart.forEach((product, index) => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('product');
+                productElement.innerHTML = `
+                <div>${product.title}</div>
+                <div class="quantity">
+                    <button onclick="decreaseQuantity(${product.id})">-</button>
+                    <span id=${index}>${product.quantity}</span>
+                    <button onclick="increaseQuantity(${product.id})">+</button>
+                </div>
+                <div>$${product.price}</div>
+                <div>
+                    <button onclick="deleteProduct(${index})">Delete</button>
+                </div>
+                `;
+                cartContainer.appendChild(productElement);
+
+            })
+            displayTotal();
+        }
+        displayCartItems()
+
+        function increaseQuantity(id) {
+            // console.log(id);
+            let positionItemIndex= cart.findIndex((val) => val.id == id);
+            cart[positionItemIndex].quantity=cart[positionItemIndex].quantity + 1;
+            displayCartItems();
+        }
+
+        function decreaseQuantity(id) {
+            // console.log(value,id);
+            let positionItemIndex=cart.findIndex((val) => val.id == id);
+            cart[positionItemIndex].quantity = cart[positionItemIndex].quantity - 1;
+            displayCartItems();
+        }
+
+        function deleteProduct(value) {
+            console.log(value);
+            cart.splice(value, 1);
+            displayCartItems();
+        }
+
+        function checkout() {
+            successMessage.textContent = 'Order placed successfully!';
+        }
+    </script>
+
+</body>
+
+</html>
